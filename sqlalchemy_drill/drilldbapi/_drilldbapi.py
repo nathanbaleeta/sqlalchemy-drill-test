@@ -287,7 +287,7 @@ class Cursor(object):
             # restart the outer parsing loop to collect trailing metadata
             self._outer_parsing_loop()
 
-        return results
+            return results
 
     @is_open
     def fetchall(self) -> List:
