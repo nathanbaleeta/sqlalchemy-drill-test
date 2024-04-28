@@ -267,9 +267,10 @@ class Cursor(object):
         try:
             while self.rownumber != fetch_until:
                 row_dict = next(self._row_stream)
-                logger.info(row_dict)
+                
                 # values ordered according to self.result_md['columns']
                 row = [row_dict[col] for col in self.result_md['columns']]
+                logger.info(row)
 
                 if self._typecaster_list is not None:
                     row = (f(v) for f, v in zip(self._typecaster_list, row))
