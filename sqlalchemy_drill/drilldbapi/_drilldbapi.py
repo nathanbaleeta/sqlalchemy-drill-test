@@ -262,10 +262,7 @@ class Cursor(object):
         results_generator = (i for i in self._row_stream)
 
         if results_generator is None:
-              raise ProgrammingError(
-                'has no row data, have you executed a query that returns data?',
-                None
-            )
+              return
         else:
             # iterate over the sequence:
             for row_dict in results_generator:
