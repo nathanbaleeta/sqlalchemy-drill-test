@@ -266,9 +266,20 @@ class Cursor(object):
 
         iterator = iter(self._row_stream)
 
+        for row_dict in iterator:
+            row = [row_dict[col] for col in self.result_md['columns']]
+
+            if self._typecaster_list is not None:
+                row = (f(v) for f, v in zip(self._typecaster_list, row))
+
+                results.append(tuple(row))
+
+            if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
+                logger.info(f'streamed {self.rownumber} rows.')
+        '''
         while True:
             try:
-                row_dict = next(iterator, self.arraysize)
+                row_dict = next(iterator)
 
                 row = [row_dict[col] for col in self.result_md['columns']]
 
@@ -281,6 +292,7 @@ class Cursor(object):
                     logger.info(f'streamed {self.rownumber} rows.')
             except StopIteration:
                 break
+        '''
         '''
         try:
             while self.rownumber != fetch_until:
