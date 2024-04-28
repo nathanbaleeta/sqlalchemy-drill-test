@@ -261,18 +261,23 @@ class Cursor(object):
         # create the generator object
         results_generator = (i for i in self._row_stream)
 
-        # iterate over the generator 
-        for row_dict in results_generator:
-            row = [row_dict[col] for col in self.result_md['columns']]
-            yield row
+        if results_generator is None:
+              raise ProgrammingError(
+                'has no row data, have you executed a query that returns data?',
+                None
+            )
+        else:
+            # iterate over the sequence:
+            for row_dict in results_generator:
+                row = [row_dict[col] for col in self.result_md['columns']]
 
-            if self._typecaster_list is not None:
-                row = (f(v) for f, v in zip(self._typecaster_list, row))
+                if self._typecaster_list is not None:
+                    row = (f(v) for f, v in zip(self._typecaster_list, row))
 
-                results.append(tuple(row))
+                    results.append(tuple(row))
 
-            if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
-                logger.info(f'streamed {self.rownumber} rows.')
+                if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
+                    logger.info(f'streamed {self.rownumber} rows.')
 
 
         '''
