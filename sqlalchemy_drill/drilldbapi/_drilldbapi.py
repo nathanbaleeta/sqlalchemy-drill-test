@@ -254,11 +254,7 @@ class Cursor(object):
         number of rows to be fetched. If size is negative then all remaining
         rows are fetched.
         '''
-        if self._row_stream is None:
-            raise ProgrammingError(
-                'has no row data, have you executed a query that returns data?',
-                None
-            )
+        
             
 
         fetch_until = self.rownumber + (size or self.arraysize)
@@ -266,6 +262,7 @@ class Cursor(object):
 
         iterator = iter(self._row_stream)
 
+        '''
         for row_dict in iterator:
             row = [row_dict[col] for col in self.result_md['columns']]
 
@@ -277,8 +274,14 @@ class Cursor(object):
             if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
                 logger.info(f'streamed {self.rownumber} rows.')
         '''
+
         while True:
             try:
+                if self._row_stream is None:
+                    raise ProgrammingError(
+                        'has no row data, have you executed a query that returns data?',
+                        None
+                    )
                 row_dict = next(iterator)
 
                 row = [row_dict[col] for col in self.result_md['columns']]
@@ -292,7 +295,7 @@ class Cursor(object):
                     logger.info(f'streamed {self.rownumber} rows.')
             except StopIteration:
                 break
-        '''
+        
         '''
         try:
             while self.rownumber != fetch_until:
