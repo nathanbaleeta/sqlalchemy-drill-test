@@ -268,7 +268,7 @@ class Cursor(object):
 
         while True:
             try:
-                row_dict = yield next(iterator, self.arraysize)
+                row_dict = next(iterator, self.arraysize)
 
                 row = [row_dict[col] for col in self.result_md['columns']]
 
