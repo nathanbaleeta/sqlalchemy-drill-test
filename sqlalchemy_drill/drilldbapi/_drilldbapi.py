@@ -255,8 +255,6 @@ class Cursor(object):
         rows are fetched.
         '''
         
-            
-
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
 
@@ -266,6 +264,7 @@ class Cursor(object):
         # iterate over the generator 
         for row_dict in results_generator:
             row = [row_dict[col] for col in self.result_md['columns']]
+            yield row
 
             if self._typecaster_list is not None:
                 row = (f(v) for f, v in zip(self._typecaster_list, row))
