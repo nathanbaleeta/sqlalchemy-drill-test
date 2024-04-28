@@ -128,7 +128,7 @@ class Cursor(object):
         methods should start this loop again once they've encountered the end of
         the row data.
 
-        Returns True iff row data is encountered in the result.
+        Returns True if row data is encountered in the result.
         '''
         try:
             while True:
@@ -264,9 +264,27 @@ class Cursor(object):
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
 
+        iterator = iter(self._row_stream)
+
+        while True:
+            try:
+                row_dict = next(iterator)
+
+                row = [row_dict[col] for col in self.result_md['columns']]
+
+                if self._typecaster_list is not None:
+                    row = (f(v) for f, v in zip(self._typecaster_list, row))
+
+                    results.append(tuple(row))
+
+                if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
+                    logger.info(f'streamed {self.rownumber} rows.')
+            except StopIteration:
+                break
+        '''
         try:
             while self.rownumber != fetch_until:
-                row_dict = next(iter(self._row_stream))
+                row_dict = next(self._row_stream)
                 
                 # values ordered according to self.result_md['columns']
                 row = [row_dict[col] for col in self.result_md['columns']]
@@ -274,7 +292,6 @@ class Cursor(object):
 
                 if self._typecaster_list is not None:
                     row = (f(v) for f, v in zip(self._typecaster_list, row))
-                    logger.info(row)
 
                     results.append(tuple(row))
                     self.rownumber += 1
@@ -290,7 +307,7 @@ class Cursor(object):
                 )
             # restart the outer parsing loop to collect trailing metadata
             self._outer_parsing_loop()
-            
+        ''' 
 
         return results
 
