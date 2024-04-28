@@ -266,7 +266,8 @@ class Cursor(object):
 
         try:
             while self.rownumber != fetch_until:
-                row_dict = next(self._row_stream, None)
+                row_dict = next(self._row_stream)
+                logger.info(row_dict)
                 # values ordered according to self.result_md['columns']
                 row = [row_dict[col] for col in self.result_md['columns']]
 
@@ -276,8 +277,8 @@ class Cursor(object):
                     results.append(tuple(row))
                     self.rownumber += 1
 
-                    if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
-                        logger.info(f'streamed {self.rownumber} rows.')
+                if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
+                    logger.info(f'streamed {self.rownumber} rows.')
 
         except StopIteration:
             self.rowcount = self.rownumber
