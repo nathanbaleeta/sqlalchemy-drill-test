@@ -256,7 +256,10 @@ class Cursor(object):
         '''
 
         if self._row_stream is None:
-            return
+            raise ProgrammingError(
+                'has no row data, have you executed a query that returns data?',
+                None
+            )
         
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
