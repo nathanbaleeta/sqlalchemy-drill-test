@@ -254,56 +254,24 @@ class Cursor(object):
         number of rows to be fetched. If size is negative then all remaining
         rows are fetched.
         '''
+
+        if self._row_stream is None:
+            return
         
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
 
-        # create the generator object
-        results_generator = (i for i in self._row_stream)
-
-        if results_generator is None:
-              return
-        else:
-            # iterate over the sequence:
-            for row_dict in results_generator:
-                row = [row_dict[col] for col in self.result_md['columns']]
-
-                if self._typecaster_list is not None:
-                    row = (f(v) for f, v in zip(self._typecaster_list, row))
-
-                    results.append(tuple(row))
-
-                if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
-                    logger.info(f'streamed {self.rownumber} rows.')
-
-
-        '''
-        for row_dict in iterator:
-            row = [row_dict[col] for col in self.result_md['columns']]
-
-            if self._typecaster_list is not None:
-                row = (f(v) for f, v in zip(self._typecaster_list, row))
-
-                results.append(tuple(row))
-
-            if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
-                logger.info(f'streamed {self.rownumber} rows.')
-        '''
-
-        '''
         try:
             while self.rownumber != fetch_until:
                 row_dict = next(self._row_stream)
-                
                 # values ordered according to self.result_md['columns']
                 row = [row_dict[col] for col in self.result_md['columns']]
-                
 
                 if self._typecaster_list is not None:
                     row = (f(v) for f, v in zip(self._typecaster_list, row))
 
-                    results.append(tuple(row))
-                    self.rownumber += 1
+                results.append(tuple(row))
+                self.rownumber += 1
 
                 if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
                     logger.info(f'streamed {self.rownumber} rows.')
@@ -311,12 +279,11 @@ class Cursor(object):
         except StopIteration:
             self.rowcount = self.rownumber
             logger.info(
-                    f'reached the end of the row data after {self.rownumber}'
-                    ' records.'
-                )
+                f'reached the end of the row data after {self.rownumber}'
+                ' records.'
+            )
             # restart the outer parsing loop to collect trailing metadata
             self._outer_parsing_loop()
-        ''' 
 
         return results
 
