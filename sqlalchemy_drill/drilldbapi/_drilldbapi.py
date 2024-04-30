@@ -285,9 +285,10 @@ class Cursor(object):
             #    f'reached the end of the row data after {self.rownumber}'
             #    ' records.'
             #)
-            return 
+             
             # restart the outer parsing loop to collect trailing metadata
-            #self._outer_parsing_loop()
+            self._outer_parsing_loop()
+            return
             
 
         return results
