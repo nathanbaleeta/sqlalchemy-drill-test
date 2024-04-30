@@ -262,6 +262,9 @@ class Cursor(object):
                 None
             )
         '''
+
+        if self._row_stream is None:
+            return
         
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
@@ -289,11 +292,8 @@ class Cursor(object):
                 ' records.'
             )
 
-            if self._row_stream is None:
-                return
-            else: 
             # restart the outer parsing loop to collect trailing metadata
-                self._outer_parsing_loop()
+            self._outer_parsing_loop()
 
         
         except Exception as err:
