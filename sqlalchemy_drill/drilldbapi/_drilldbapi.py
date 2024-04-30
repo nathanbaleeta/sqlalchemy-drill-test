@@ -289,7 +289,7 @@ class Cursor(object):
                 ' records.'
             )
 
-            if not self.rowcount:
+            if self._row_stream is None:
                 return
             else: 
             # restart the outer parsing loop to collect trailing metadata
