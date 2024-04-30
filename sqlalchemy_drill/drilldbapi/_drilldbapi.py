@@ -280,11 +280,6 @@ class Cursor(object):
                     logger.info(f'streamed {self.rownumber} rows.')
 
            
-
-        except Exception as err:
-            logger.error(f"Unexpected {err=}, {type(err)=}")
-            raise        
-        '''
         except StopIteration:
             #self.rowcount = self.rownumber
             #logger.info(
@@ -293,11 +288,15 @@ class Cursor(object):
             #)
              
             # restart the outer parsing loop to collect trailing metadata
-             self._outer_parsing_loop()
+            self._outer_parsing_loop()
             
 
             return None
-        '''    
+        except Exception as err:
+            logger.error(f"Unexpected {err=}, {type(err)=}")
+            raise        
+        
+            
         return results
 
     @is_open
