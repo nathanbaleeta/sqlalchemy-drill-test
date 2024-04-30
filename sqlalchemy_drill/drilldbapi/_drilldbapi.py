@@ -267,8 +267,6 @@ class Cursor(object):
         results = []
 
         try:
-            if self._row_stream is None:
-                return None
             while self.rownumber != fetch_until:
                 row_dict = next(self._row_stream)
                 # values ordered according to self.result_md['columns']
@@ -292,8 +290,8 @@ class Cursor(object):
             #)
              
             # restart the outer parsing loop to collect trailing metadata
-            #self._outer_parsing_loop()
-            return None
+            'return' if self._row_stream is None else self._outer_parsing_loop()
+
         
         except Exception as err:
             logger.error(f"Unexpected {err=}, {type(err)=}")
