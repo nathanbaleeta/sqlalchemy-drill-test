@@ -255,16 +255,20 @@ class Cursor(object):
         rows are fetched.
         '''
 
+        '''
         if self._row_stream is None:
             raise ProgrammingError(
                 'has no row data, have you executed a query that returns data?',
                 None
             )
+        '''
         
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
 
         try:
+            if self._row_stream is None:
+                return None
             while self.rownumber != fetch_until:
                 row_dict = next(self._row_stream)
                 # values ordered according to self.result_md['columns']
@@ -288,10 +292,9 @@ class Cursor(object):
             #)
              
             # restart the outer parsing loop to collect trailing metadata
-            self._outer_parsing_loop()
-            
-
+            #self._outer_parsing_loop()
             return None
+        
         except Exception as err:
             logger.error(f"Unexpected {err=}, {type(err)=}")
             raise        
