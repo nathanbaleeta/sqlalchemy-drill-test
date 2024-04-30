@@ -283,14 +283,17 @@ class Cursor(object):
 
            
         except StopIteration:
-            #self.rowcount = self.rownumber
-            #logger.info(
-            #    f'reached the end of the row data after {self.rownumber}'
-            #    ' records.'
-            #)
-             
+            self.rowcount = self.rownumber
+            logger.info(
+                f'reached the end of the row data after {self.rownumber}'
+                ' records.'
+            )
+
+            if not self.rowcount:
+                return
+            else: 
             # restart the outer parsing loop to collect trailing metadata
-            'return' if self._row_stream is None else self._outer_parsing_loop()
+                self._outer_parsing_loop()
 
         
         except Exception as err:
