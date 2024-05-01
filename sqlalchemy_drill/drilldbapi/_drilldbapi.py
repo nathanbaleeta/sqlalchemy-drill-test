@@ -274,7 +274,7 @@ class Cursor(object):
                 #row_dict = next(self._row_stream)
                 #row_dict = next(generator_iterable)
                 #row_dict = list(generator_iterable)
-                row_dict = next(generator_iterable)
+                row_dict = yield(generator_iterable)
                 
 
                 # values ordered according to self.result_md['columns']
