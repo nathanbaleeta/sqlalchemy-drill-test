@@ -270,8 +270,9 @@ class Cursor(object):
         
         try:
             while self.rownumber != fetch_until:
-            
-                row_dict = yield(x)
+                #row_dict = next(self._row_stream)
+                row_dict = next(islice(self._row_stream, fetch_until))
+
 
                     # values ordered according to self.result_md['columns']
                 row = [row_dict[col] for col in self.result_md['columns']]
