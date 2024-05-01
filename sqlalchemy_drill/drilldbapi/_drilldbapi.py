@@ -255,16 +255,12 @@ class Cursor(object):
         rows are fetched.
         '''
 
-        '''
+        
         if self._row_stream is None:
             raise ProgrammingError(
                 'has no row data, have you executed a query that returns data?',
                 None
             )
-        '''
-
-        if self._row_stream is None:
-            return
         
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
@@ -272,18 +268,22 @@ class Cursor(object):
         while True:
             try:
                 if self.rownumber != fetch_until:
-                    row_dict = yield(self._row_stream)
-                    # values ordered according to self.result_md['columns']
-                    row = [row_dict[col] for col in self.result_md['columns']]
+                    if self._row_stream is not None:
+                        row_dict = yield(self._row_stream)
 
-                    if self._typecaster_list is not None:
-                        row = (f(v) for f, v in zip(self._typecaster_list, row))
+                        # values ordered according to self.result_md['columns']
+                        row = [row_dict[col] for col in self.result_md['columns']]
 
-                    results.append(tuple(row))
-                    self.rownumber += 1
+                        if self._typecaster_list is not None:
+                            row = (f(v) for f, v in zip(self._typecaster_list, row))
 
-                    if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
-                        logger.info(f'streamed {self.rownumber} rows.')
+                        results.append(tuple(row))
+                        self.rownumber += 1
+
+                        if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
+                            logger.info(f'streamed {self.rownumber} rows.')
+                    else:
+                        return
 
             
             except StopIteration:
