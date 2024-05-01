@@ -268,14 +268,14 @@ class Cursor(object):
         generator_iterable = (x for x in self._row_stream)
         #generator_iterable2 = (x for x in self._row_stream if x not None)
         
+        # generators dont support indexing
         
         try:
             while self.rownumber != fetch_until:
                 #row_dict = next(self._row_stream)
                 #row_dict = next(generator_iterable)
                 #row_dict = list(generator_iterable)
-                row_dict = yield(generator_iterable)
-                
+                row_dict = next(generator_iterable)
 
                 # values ordered according to self.result_md['columns']
                 row = [row_dict[col] for col in self.result_md['columns']]
@@ -300,6 +300,7 @@ class Cursor(object):
 
             # restart the outer parsing loop to collect trailing metadata
             self._outer_parsing_loop()       
+            return
         
         return results
 
