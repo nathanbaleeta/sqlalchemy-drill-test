@@ -267,8 +267,8 @@ class Cursor(object):
         
         try:
             while self.rownumber != fetch_until:
-                row_dict = next(self._row_stream)
-                #row_dict = next(islice(self._row_stream, self.arraysize))
+                #row_dict = next(self._row_stream)
+                row_dict = next(islice(self._row_stream, self.arraysize))
 
 
                 # values ordered according to self.result_md['columns']
