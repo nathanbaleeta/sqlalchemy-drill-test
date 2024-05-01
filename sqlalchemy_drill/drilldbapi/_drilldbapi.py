@@ -267,35 +267,35 @@ class Cursor(object):
 
         x = list(self._row_stream)
 
-        while True:
-            try:
-                if self.rownumber != fetch_until:
+        
+        try:
+            while self.rownumber != fetch_until:
             
-                        row_dict = yield(x)
+                row_dict = yield(x)
 
-                        # values ordered according to self.result_md['columns']
-                        row = [row_dict[col] for col in self.result_md['columns']]
+                    # values ordered according to self.result_md['columns']
+                row = [row_dict[col] for col in self.result_md['columns']]
 
-                        if self._typecaster_list is not None:
-                            row = (f(v) for f, v in zip(self._typecaster_list, row))
+                if self._typecaster_list is not None:
+                    row = (f(v) for f, v in zip(self._typecaster_list, row))
 
-                        results.append(tuple(row))
-                        self.rownumber += 1
+                    results.append(tuple(row))
+                    self.rownumber += 1
 
-                        if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
-                            logger.info(f'streamed {self.rownumber} rows.')
+                if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
+                    logger.info(f'streamed {self.rownumber} rows.')
         
 
             
-            except StopIteration:
-                self.rowcount = self.rownumber
-                logger.info(
-                    f'reached the end of the row data after {self.rownumber}'
-                    ' records.'
+        except StopIteration:
+            self.rowcount = self.rownumber
+            logger.info(
+                f'reached the end of the row data after {self.rownumber}'
+                ' records.'
                 )
 
-                # restart the outer parsing loop to collect trailing metadata
-                self._outer_parsing_loop()       
+            # restart the outer parsing loop to collect trailing metadata
+            self._outer_parsing_loop()       
         
         return results
 
