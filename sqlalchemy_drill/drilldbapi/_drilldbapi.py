@@ -266,7 +266,6 @@ class Cursor(object):
         results = []
 
         generator_iterable = (x for x in self._row_stream)
-        #generator_iterable2 = (x for x in self._row_stream if x not None)
         
         # generators dont support indexing
         
@@ -299,8 +298,11 @@ class Cursor(object):
                 )
 
             # restart the outer parsing loop to collect trailing metadata
-            self._outer_parsing_loop()       
-            return
+            if generator_iterable is None:
+                return
+            else:
+                self._outer_parsing_loop()       
+            
         
         return results
 
