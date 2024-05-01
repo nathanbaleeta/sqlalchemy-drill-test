@@ -264,12 +264,17 @@ class Cursor(object):
         
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
+
+        generator_iterable = (x for x in iter(self._row_stream))
+        #generator_iterable2 = (x for x in self._row_stream if x not None)
+        
         
         try:
             while self.rownumber != fetch_until:
                 #row_dict = next(self._row_stream)
-                row_dict = next(chain(self._row_stream))
-                # chain.from_iterable(self._row_stream)
+                #row_dict = next(generator_iterable)
+                row_dict = generator_iterable
+                
 
                 # values ordered according to self.result_md['columns']
                 row = [row_dict[col] for col in self.result_md['columns']]
