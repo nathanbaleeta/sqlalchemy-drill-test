@@ -273,7 +273,8 @@ class Cursor(object):
             while self.rownumber != fetch_until:
                 #row_dict = next(self._row_stream)
                 #row_dict = next(generator_iterable)
-                row_dict = list(generator_iterable)
+                #row_dict = list(generator_iterable)
+                row_dict = next(generator_iterable)
                 
 
                 # values ordered according to self.result_md['columns']
