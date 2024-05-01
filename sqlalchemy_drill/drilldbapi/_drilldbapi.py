@@ -260,16 +260,18 @@ class Cursor(object):
             raise ProgrammingError(
                 'has no row data, have you executed a query that returns data?',
                 None
-            )
+            ) 
         
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
 
+        x = list(self._row_stream)
+
         while True:
             try:
                 if self.rownumber != fetch_until:
-                    if self._row_stream is not None:
-                        row_dict = yield(self._row_stream)
+            
+                        row_dict = yield(x)
 
                         # values ordered according to self.result_md['columns']
                         row = [row_dict[col] for col in self.result_md['columns']]
@@ -282,8 +284,7 @@ class Cursor(object):
 
                         if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
                             logger.info(f'streamed {self.rownumber} rows.')
-                    else:
-                        return
+        
 
             
             except StopIteration:
