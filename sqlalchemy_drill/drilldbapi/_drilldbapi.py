@@ -265,7 +265,7 @@ class Cursor(object):
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
 
-        generator_iterable = (x for x in iter(self._row_stream))
+        generator_iterable = (x for x in self._row_stream)
         #generator_iterable2 = (x for x in self._row_stream if x not None)
         
         
