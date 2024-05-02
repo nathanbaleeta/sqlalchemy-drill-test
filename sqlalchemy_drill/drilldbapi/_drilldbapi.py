@@ -273,8 +273,12 @@ class Cursor(object):
         
         try:
             while self.rownumber != fetch_until:
-                row_dict = self.mygenerator(self._row_stream)
+                #row_dict = self.mygenerator(self._row_stream)
 
+                gen = self.mygenerator(self._row_stream)
+
+                row_dict = [element for element in gen]
+    
                 # values ordered according to self.result_md['columns']
                 row = [row_dict[col] for col in self.result_md['columns']]
 
