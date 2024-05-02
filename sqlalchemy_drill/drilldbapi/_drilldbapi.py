@@ -262,6 +262,9 @@ class Cursor(object):
                 None
             ) 
         
+        logger.info(type(self._row_stream))
+        logger.info(self._row_stream)
+
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
 
@@ -275,7 +278,7 @@ class Cursor(object):
                 #row_dict = next(generator_iterable)
                 #row_dict = list(generator_iterable)
                 #row_dict = next(generator_iterable)
-                row_dict = [int(i) for i in generator_iterable]
+                row_dict = [i for i in generator_iterable]
 
                 # values ordered according to self.result_md['columns']
                 row = [row_dict[col] for col in self.result_md['columns']]
