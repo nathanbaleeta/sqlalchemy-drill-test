@@ -270,7 +270,6 @@ class Cursor(object):
 
         #data = iter(self._row_stream)
 
-        stop_value = None # or another value
         '''
         while self.rownumber != fetch_until:
             row_dict = next(self._row_stream, stop_value)
@@ -296,7 +295,7 @@ class Cursor(object):
         while True:
             try:
                 while self.rownumber != fetch_until:
-                    row_dict = next(self._row_stream, stop_value)
+                    row_dict = next(self._row_stream, None)
 
                     # values ordered according to self.result_md['columns']
                     row = [row_dict[col] for col in self.result_md['columns']]
@@ -310,7 +309,7 @@ class Cursor(object):
                     if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
                         logger.info(f'streamed {self.rownumber} rows.')
 
-                    if row_dict is stop_value:
+                    if row_dict is None:
                         break
             
 
