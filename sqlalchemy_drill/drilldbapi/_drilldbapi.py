@@ -269,12 +269,12 @@ class Cursor(object):
         
         # Remember generators dont support indexing
 
-        data = iter(self._row_stream)
+        #data = iter(self._row_stream)
 
         stop_value = None # or another value
-        
+
         while True:
-            row_dict = next(data, stop_value)
+            row_dict = next(self._row_stream, stop_value)
 
             # values ordered according to self.result_md['columns']
             row = [row_dict[col] for col in self.result_md['columns']]
