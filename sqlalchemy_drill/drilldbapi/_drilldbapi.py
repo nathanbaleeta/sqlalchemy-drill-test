@@ -245,6 +245,10 @@ class Cursor(object):
         res = self.fetchmany(1)
         return next(iter(res), None)
 
+    def mygenerator(data_stream):
+        for i in data_stream:
+            yield i
+
     @is_open
     def fetchmany(self, size: int = None):
         '''Fetch the next set of rows of a query result.
@@ -266,35 +270,11 @@ class Cursor(object):
         results = []
 
         #generator_iterable = (x for x in self._row_stream)
-    
-
-
-        '''
-        while self.rownumber != fetch_until:
-            row_dict = next(self._row_stream, stop_value)
-
-            # values ordered according to self.result_md['columns']
-            row = [row_dict[col] for col in self.result_md['columns']]
-
-            if self._typecaster_list is not None:
-                row = (f(v) for f, v in zip(self._typecaster_list, row))
-
-            results.append(tuple(row))
-            self.rownumber += 1
-
-            if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
-                logger.info(f'streamed {self.rownumber} rows.')
-
-            if row_dict is stop_value:
-                break
-
-            return results
-        '''
-
         
         try:
             while self.rownumber != fetch_until:
-                row_dict = next(self._row_stream)
+                data = self.mygenerator(self._row_stream)
+                row_dict = next(data)
 
                 # values ordered according to self.result_md['columns']
                 row = [row_dict[col] for col in self.result_md['columns']]
