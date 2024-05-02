@@ -270,15 +270,34 @@ class Cursor(object):
         # Remember generators dont support indexing
 
         data = iter(self._row_stream)
+
+        stop_value = None # or another value
         
+        while True:
+            row_dict = next(data, stop_value)
+
+            # values ordered according to self.result_md['columns']
+            row = [row_dict[col] for col in self.result_md['columns']]
+
+            if self._typecaster_list is not None:
+                row = (f(v) for f, v in zip(self._typecaster_list, row))
+
+            results.append(tuple(row))
+            self.rownumber += 1
+
+            if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
+                logger.info(f'streamed {self.rownumber} rows.')
+
+            if row_dict is stop_value:
+                break
+
+            return results
+        
+        '''
         while True:
             try:
                 while self.rownumber != fetch_until:
                     #row_dict = next(self._row_stream)
-                    #row_dict = next(generator_iterable)
-                    #row_dict = list(generator_iterable)
-                    #row_dict = next(generator_iterable)
-                    #row_dict = [i for i in generator_iterable]
                     row_dict = next(data)
 
                     # values ordered according to self.result_md['columns']
@@ -294,7 +313,6 @@ class Cursor(object):
                         logger.info(f'streamed {self.rownumber} rows.')
             
 
-                
             except StopIteration:
                 #self.rowcount = self.rownumber
                 """ logger.info(
@@ -311,8 +329,9 @@ class Cursor(object):
                    self._outer_parsing_loop()  """
 
                 break
-        
+            
             return results
+            '''
 
     @is_open
     def fetchall(self) -> List:
