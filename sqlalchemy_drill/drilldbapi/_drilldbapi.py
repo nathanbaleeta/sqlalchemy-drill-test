@@ -271,7 +271,7 @@ class Cursor(object):
         #data = iter(self._row_stream)
 
         stop_value = None # or another value
-
+        '''
         while self.rownumber != fetch_until:
             row_dict = next(self._row_stream, stop_value)
 
@@ -291,13 +291,12 @@ class Cursor(object):
                 break
 
             return results
-        
         '''
+
         while True:
             try:
                 while self.rownumber != fetch_until:
-                    #row_dict = next(self._row_stream)
-                    row_dict = next(data)
+                    row_dict = next(self._row_stream, stop_value)
 
                     # values ordered according to self.result_md['columns']
                     row = [row_dict[col] for col in self.result_md['columns']]
@@ -310,27 +309,23 @@ class Cursor(object):
 
                     if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
                         logger.info(f'streamed {self.rownumber} rows.')
+
+                    if row_dict is stop_value:
+                        break
             
 
             except StopIteration:
-                #self.rowcount = self.rownumber
-                """ logger.info(
+                self.rowcount = self.rownumber
+                logger.info(
                     f'reached the end of the row data after {self.rownumber}'
                     ' records.'
-                    ) """
+                ) 
 
                 # restart the outer parsing loop to collect trailing metadata
-                #self._outer_parsing_loop()     
-                
-                """ if results is None:
-                    return
-                else:
-                   self._outer_parsing_loop()  """
-
-                break
-            
+                self._outer_parsing_loop()     
+                        
             return results
-            '''
+            
 
     @is_open
     def fetchall(self) -> List:
