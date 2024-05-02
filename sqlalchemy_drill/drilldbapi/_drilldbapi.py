@@ -310,7 +310,7 @@ class Cursor(object):
                 else:
                    self._outer_parsing_loop()  """
 
-                return
+                break
         
             return results
 
