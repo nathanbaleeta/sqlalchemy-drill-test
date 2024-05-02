@@ -265,7 +265,7 @@ class Cursor(object):
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
 
-        generator_iterable = (x for x in self._row_stream)
+        #generator_iterable = (x for x in self._row_stream)
         
         # Remember generators dont support indexing
         
@@ -275,10 +275,11 @@ class Cursor(object):
                 #row_dict = next(generator_iterable)
                 #row_dict = list(generator_iterable)
                 #row_dict = next(generator_iterable)
-                row_dict = [i for i in generator_iterable]
+                #row_dict = [i for i in generator_iterable]
+                row_dict = [i for i in self._row_stream]
 
                 # values ordered according to self.result_md['columns']
-                row = [int(row_dict[col]) for col in self.result_md['columns']]
+                row = [row_dict[col] for col in self.result_md['columns']]
 
                 if self._typecaster_list is not None:
                     row = (f(v) for f, v in zip(self._typecaster_list, row))
