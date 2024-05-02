@@ -245,8 +245,8 @@ class Cursor(object):
         res = self.fetchmany(1)
         return next(iter(res), None)
 
-    def mygenerator(data_stream):
-        for i in data_stream:
+    def mygenerator(self):
+        for i in self._row_stream:
             yield i
 
     @is_open
@@ -275,7 +275,7 @@ class Cursor(object):
             while self.rownumber != fetch_until:
                 #row_dict = self.mygenerator(self._row_stream)
 
-                gen = self.mygenerator(self._row_stream)
+                gen = self.mygenerator()
 
                 row_dict = [element for element in gen]
     
