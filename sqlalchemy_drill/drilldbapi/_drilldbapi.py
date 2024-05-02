@@ -263,7 +263,7 @@ class Cursor(object):
             ) 
 
         #fetch_until = self.rownumber + (size or self.arraysize)
-        results = []
+        #results = []
 
         #generator_iterable = (x for x in self._row_stream)
     
@@ -273,6 +273,7 @@ class Cursor(object):
         stop_value = None # or another value
 
         while True:
+            results = []
             row_dict = next(self._row_stream, stop_value)
 
             # values ordered according to self.result_md['columns']
