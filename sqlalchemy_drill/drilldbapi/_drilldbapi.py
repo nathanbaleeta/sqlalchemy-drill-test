@@ -266,8 +266,7 @@ class Cursor(object):
         results = []
 
         #generator_iterable = (x for x in self._row_stream)
-        
-        # Remember generators dont support indexing
+    
 
         #data = iter(self._row_stream)
 
@@ -291,7 +290,7 @@ class Cursor(object):
             if row_dict is stop_value:
                 break
 
-        return results
+            return results
         
         '''
         while True:
