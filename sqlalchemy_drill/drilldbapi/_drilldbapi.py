@@ -268,6 +268,8 @@ class Cursor(object):
         #generator_iterable = (x for x in self._row_stream)
         
         # Remember generators dont support indexing
+
+        data = iter(self._row_stream)
         
         while True:
             try:
@@ -277,7 +279,7 @@ class Cursor(object):
                     #row_dict = list(generator_iterable)
                     #row_dict = next(generator_iterable)
                     #row_dict = [i for i in generator_iterable]
-                    row_dict = next(self._row_stream)
+                    row_dict = next(data)
 
                     # values ordered according to self.result_md['columns']
                     row = [row_dict[col] for col in self.result_md['columns']]
@@ -302,7 +304,7 @@ class Cursor(object):
 
                 # restart the outer parsing loop to collect trailing metadata
                 #self._outer_parsing_loop()     
-                break  
+                break
             
         
         return results
