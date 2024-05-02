@@ -304,7 +304,11 @@ class Cursor(object):
 
                 # restart the outer parsing loop to collect trailing metadata
                 #self._outer_parsing_loop()     
-                return
+                if results is None:
+                    #Do something when array has no len()
+                    return
+                else:
+                   self._outer_parsing_loop() 
             
         
         return results
