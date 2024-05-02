@@ -274,22 +274,23 @@ class Cursor(object):
         stop_value = None # or another value
 
         while True:
-            row_dict = next(self._row_stream, stop_value)
+            while self.rownumber != fetch_until:
+                row_dict = next(self._row_stream, stop_value)
 
-            # values ordered according to self.result_md['columns']
-            row = [row_dict[col] for col in self.result_md['columns']]
+                # values ordered according to self.result_md['columns']
+                row = [row_dict[col] for col in self.result_md['columns']]
 
-            if self._typecaster_list is not None:
-                row = (f(v) for f, v in zip(self._typecaster_list, row))
+                if self._typecaster_list is not None:
+                    row = (f(v) for f, v in zip(self._typecaster_list, row))
 
-            results.append(tuple(row))
-            self.rownumber += 1
+                results.append(tuple(row))
+                self.rownumber += 1
 
-            if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
-                logger.info(f'streamed {self.rownumber} rows.')
+                if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
+                    logger.info(f'streamed {self.rownumber} rows.')
 
-            if row_dict is stop_value:
-                break
+                if row_dict is stop_value:
+                    break
 
             return results
         
