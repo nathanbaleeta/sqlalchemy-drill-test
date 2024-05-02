@@ -304,7 +304,7 @@ class Cursor(object):
 
                 # restart the outer parsing loop to collect trailing metadata
                 #self._outer_parsing_loop()     
-                break
+                return
             
         
         return results
