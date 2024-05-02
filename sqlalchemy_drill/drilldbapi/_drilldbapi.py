@@ -301,7 +301,7 @@ class Cursor(object):
                 #self._outer_parsing_loop() 
                 break    
                     
-        return results
+            return results
             
 
     @is_open
