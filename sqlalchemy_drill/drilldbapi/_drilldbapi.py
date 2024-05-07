@@ -150,13 +150,13 @@ class Cursor(object):
                     self.result_md[value] = next(
                         _items_once(self._result_event_stream, value)
                     )
-                    break
         except StopIteration:
             logger.info(
                 'reached the end of the result stream, parsing complete.'
             )
+            
 
-        self._report_query_state()
+        #self._report_query_state()
         
         
         return False
