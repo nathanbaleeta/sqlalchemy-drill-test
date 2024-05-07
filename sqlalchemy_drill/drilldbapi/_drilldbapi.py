@@ -270,22 +270,22 @@ class Cursor(object):
 
         while True:
             try:
-                while self.rownumber != fetch_until:
+                #while self.rownumber != fetch_until:
 
-                    row_dict = next(gen)
-                    #row_dict = next(self._row_stream)
-                    
-                    # values ordered according to self.result_md['columns']
-                    row = [row_dict[col] for col in self.result_md['columns']]
+                row_dict = next(gen)
+                #row_dict = next(self._row_stream)
 
-                    if self._typecaster_list is not None:
-                        row = (f(v) for f, v in zip(self._typecaster_list, row))
+                # values ordered according to self.result_md['columns']
+                row = [row_dict[col] for col in self.result_md['columns']]
 
-                    results.append(tuple(row))
-                    self.rownumber += 1
+                if self._typecaster_list is not None:
+                    row = (f(v) for f, v in zip(self._typecaster_list, row))
 
-                    if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
-                        logger.info(f'streamed {self.rownumber} rows.')
+                results.append(tuple(row))
+                self.rownumber += 1
+
+                if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
+                    logger.info(f'streamed {self.rownumber} rows.')
 
             except:
                 self.rowcount = self.rownumber
@@ -294,7 +294,7 @@ class Cursor(object):
                     ' records.'
                 )
                 # restart the outer parsing loop to collect trailing metadata
-                self._outer_parsing_loop()
+                #self._outer_parsing_loop()
                 break
 
         return results
