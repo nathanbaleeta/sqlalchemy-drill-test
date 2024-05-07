@@ -243,6 +243,10 @@ class Cursor(object):
     def fetchone(self):
         res = self.fetchmany(1)
         return next(iter(res), None)
+    
+    def mygenerator(self):
+        for i in self._row_stream:
+            yield i
 
     @is_open
     def fetchmany(self, size: int = None):
@@ -262,10 +266,15 @@ class Cursor(object):
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
 
+        gen = self.mygenerator()
+
         while True:
             try:
                 while self.rownumber != fetch_until:
-                    row_dict = next(self._row_stream)
+
+                    row_dict = next(gen)
+                    #row_dict = next(self._row_stream)
+                    
                     # values ordered according to self.result_md['columns']
                     row = [row_dict[col] for col in self.result_md['columns']]
 
