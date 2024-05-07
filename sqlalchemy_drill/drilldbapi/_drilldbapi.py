@@ -128,7 +128,7 @@ class Cursor(object):
         methods should start this loop again once they've encountered the end of
         the row data.
 
-        Returns True iff row data is encountered in the result.
+        Returns True if row data is encountered in the result.
         '''
         try:
             while True:
@@ -156,6 +156,7 @@ class Cursor(object):
             )
 
         self._report_query_state()
+        
         return False
 
     @is_open
@@ -243,7 +244,7 @@ class Cursor(object):
     def fetchone(self):
         res = self.fetchmany(1)
         return next(iter(res), None)
-    
+
     def mygenerator(self):
         for i in self._row_stream:
             yield i
@@ -257,11 +258,13 @@ class Cursor(object):
         number of rows to be fetched. If size is negative then all remaining
         rows are fetched.
         '''
+
+        
         if self._row_stream is None:
             raise ProgrammingError(
                 'has no row data, have you executed a query that returns data?',
                 None
-            )
+            ) 
 
         fetch_until = self.rownumber + (size or self.arraysize)
         results = []
@@ -271,10 +274,9 @@ class Cursor(object):
         while True:
             try:
                 #while self.rownumber != fetch_until:
-
+                    
                 row_dict = next(gen)
-                #row_dict = next(self._row_stream)
-
+    
                 # values ordered according to self.result_md['columns']
                 row = [row_dict[col] for col in self.result_md['columns']]
 
@@ -286,6 +288,7 @@ class Cursor(object):
 
                 if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
                     logger.info(f'streamed {self.rownumber} rows.')
+            
 
             except:
                 self.rowcount = self.rownumber
@@ -293,11 +296,13 @@ class Cursor(object):
                     f'reached the end of the row data after {self.rownumber}'
                     ' records.'
                 )
-                # restart the outer parsing loop to collect trailing metadata
-                #self._outer_parsing_loop()
-                break
 
+                #restart the outer parsing loop to collect trailing metadata
+                #self._outer_parsing_loop() 
+                break
+                    
         return results
+            
 
     @is_open
     def fetchall(self) -> List:
