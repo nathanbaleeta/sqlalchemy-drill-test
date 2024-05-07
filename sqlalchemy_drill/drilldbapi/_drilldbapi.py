@@ -147,10 +147,9 @@ class Cursor(object):
                     return True
                 else:
                     # save the parsed object to the result metadata dict
-                    '''
                     self.result_md[value] = next(
                         _items_once(self._result_event_stream, value)
-                    )'''
+                    )
                     break
         except StopIteration:
             logger.info(
