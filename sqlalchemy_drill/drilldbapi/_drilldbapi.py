@@ -277,7 +277,7 @@ class Cursor(object):
                 if self.rownumber % api_globals._PROGRESS_LOG_N == 0:
                     logger.info(f'streamed {self.rownumber} rows.')
 
-        except StopIteration:
+        except:
             self.rowcount = self.rownumber
             logger.info(
                 f'reached the end of the row data after {self.rownumber}'
