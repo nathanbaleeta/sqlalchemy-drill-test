@@ -111,10 +111,13 @@ class Cursor(object):
             logger.warning(error_message)
             logger.warning(stack_trace)
 
+            '''
             raise DatabaseError(
                 f'Final Drill query state is {query_state}. {error_message}',
                 None
             )
+            '''
+            return
 
     def _outer_parsing_loop(self) -> bool:
         '''Internal method to process the outermost query result JSON structure.
