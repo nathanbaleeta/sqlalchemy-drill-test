@@ -38,7 +38,7 @@ logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.ERROR)
 _type_map = {
     'bit': types.BOOLEAN,
     #'bigint': types.BIGINT,
-    'bigint': types.DATE,
+    'bigint': types.DATETIME,
     'binary': types.LargeBinary,
     'boolean': types.BOOLEAN,
     #'date': types.DATE,
